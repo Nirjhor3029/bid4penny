@@ -1,0 +1,85 @@
+/* Custom styles */
+.steps-section {
+    background: linear-gradient(90deg, #3b82f6 0%, #14b8a6 50%, #10b981 100%);
+    color: white;
+}
+
+.step-number {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.25rem;
+}
+
+.categories-scroll {
+    overflow: hidden;
+    position: relative;
+}
+
+.categories {
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 0 40px;
+}
+
+.categories::-webkit-scrollbar {
+    display: none;
+}
+
+.category-link {
+    color: #4b5563;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    white-space: nowrap;
+    transition: color 0.2s;
+}
+
+.category-link:hover {
+    color: #10b981;
+}
+
+.scroll-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    padding: 0.25rem 0.5rem;
+    border-radius: 50%;
+}
+
+.scroll-left {
+    left: 0;
+}
+
+.scroll-right {
+    right: 0;
+}
+
+.card {
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+}
+
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .steps-section .row>div {
+        margin-bottom: 1.5rem;
+    }
+
+    .categories {
+        padding: 0 30px;
+    }
+}

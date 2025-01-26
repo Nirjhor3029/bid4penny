@@ -1,9 +1,13 @@
 <?php
 
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Front\BiddingController;
+use App\Http\Controllers\Front\PageController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::redirect('/', '/login');
+// Route::redirect('/', '/login');
+Route::get('/', [PageController::class, 'index'])->name('index');
 Route::get('/home', function () {
     if (session('status')) {
         return redirect()->route('admin.home')->with('status', session('status'));
@@ -15,7 +19,12 @@ Route::get('/home', function () {
 // Auth::routes(['register' => false]);
 Auth::routes();
 
-Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth']], function () {
+
+Route::group([ 'as' => 'user.', 'middleware' => ['auth']], function () {
+    Route::post('product/bidding', [BiddingController::class,'placeBid'])->name('placeBid');
+});
+
+Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth', 'admin']], function () {
     Route::get('/', 'HomeController@index')->name('home');
     // Permissions
     Route::delete('permissions/destroy', 'PermissionsController@massDestroy')->name('permissions.massDestroy');
@@ -40,9 +49,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::resource('product-tags', 'ProductTagController');
 
     // Product
-    Route::delete('products/destroy', 'ProductController@massDestroy')->name('products.massDestroy');
-    Route::post('products/media', 'ProductController@storeMedia')->name('products.storeMedia');
-    Route::post('products/ckmedia', 'ProductController@storeCKEditorImages')->name('products.storeCKEditorImages');
+    Route::delete('products/destroy',[ProductController::class,'massDestroy'])->name('products.massDestroy');
+    Route::post('products/media',[ProductController::class,'storeMedia'])->name('products.storeMedia');
+    Route::post('products/ckmedia',[ProductController::class,'storeCKEditorImages'])->name('products.storeCKEditorImages');
     Route::resource('products', 'ProductController');
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {
