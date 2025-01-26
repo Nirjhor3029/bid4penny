@@ -1,4 +1,19 @@
 @extends('layouts.front')
+
+@section('styles')
+    <style>
+        .highlight-text {
+            background-color: #80d780;
+        }
+
+        .timer {
+            font-size: 18px;
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+@endsection
+
 @section('content')
     <!-- Steps Section -->
     <div class="steps-section py-5">
@@ -107,30 +122,77 @@
 
 
 
+            $(".timer").each(function() {
+                const timer = $(this);
+                let totalSeconds = parseInt(timer.data("time"), 10);
+
+                const interval = setInterval(function() {
+                    const minutes = Math.floor(totalSeconds / 60);
+                    const seconds = totalSeconds % 60;
+
+                    // Format as MM:SS
+                    timer.text(
+                        `00:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`
+                        );
+
+                    totalSeconds--;
+
+                    if (totalSeconds < 0) {
+                        clearInterval(interval);
+                        timer.text("00:00:00"); // Time is up!
+                    }
+                }, 1000);
+            });
+
 
 
         });
     </script>
 
     <script>
-        // Initialize Laravel Echo with Pusher
-        window.Echo = new Echo({
-            broadcaster: 'pusher',
-            key: 'b412aa57552f69c0170e',
-            // cluster: 'mt1',
-            cluster: 'ap2',
-            forceTLS: true
-        });
+        $(document).ready(function() {
 
-        // Listen to the channel and event
-        window.Echo.channel('bids')
-            .listen('PriceUpdated', (event) => {
-                console.log(event);
 
-                const itemElement = document.querySelector(`#item-${event.itemId}`);
-                if (itemElement) {
-                    itemElement.querySelector('.price').innerText = event.newPrice.toFixed(2);
-                }
+            // Initialize Laravel Echo with Pusher
+            window.Echo = new Echo({
+                broadcaster: 'pusher',
+                key: 'b412aa57552f69c0170e',
+                // cluster: 'mt1',
+                cluster: 'ap2',
+                forceTLS: true
             });
+
+            // Listen to the channel and event
+            // window.Echo.channel('bids')
+            //     .listen('PriceUpdated', (event) => {
+            //         console.log(event);
+
+            //         const itemElement = document.querySelector(`#item-${event.itemId}`);
+            //         if (itemElement) {
+            //             itemElement.querySelector('.price').innerText = event.newPrice.toFixed(2);
+            //         }
+            //     });
+
+            window.Echo.channel('bids')
+                .listen('.price.updated', (event) => { // Note the leading dot
+                    console.log(event);
+
+
+                    const itemElement = $(`#item-${event.itemId}`);
+                    if (itemElement) {
+                        itemElement.find('.price_amount').text(event.newPrice.toFixed(2));
+                        itemElement.find('.bidding_count').text(event.totalBids);
+                        itemElement.find('.user_name').text(event.userName);
+
+
+
+                        let dynamicText = itemElement.find(".dynamic-text");
+                        dynamicText.addClass("highlight-text");
+                        setTimeout(() => {
+                            dynamicText.removeClass("highlight-text");
+                        }, 1000);
+                    }
+                });
+        });
     </script>
 @endsection

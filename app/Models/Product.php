@@ -58,6 +58,11 @@ class Product extends Model implements HasMedia
         return $this->belongsToMany(ProductTag::class);
     }
 
+    public function biddings()
+    {
+        return $this->hasMany(Bidding::class);
+    }
+
     public function getPhotoAttribute()
     {
         $files = $this->getMedia('photo');
