@@ -4,11 +4,11 @@
         @foreach ($products as $item)
             <!-- Auction Item -->
             <div class="col-md-3">
-                <div class="card h-100" id="item-{{ $item->id }}">
+                <div class="card product-card h-100" id="item-{{ $item->id }}">
                     <div class="position-relative">
                         <img src="{{ asset('/assets/front/images/placeholder.PNG') }}" class="card-img-top"
                             alt="MacBook Pro">
-                        <button class="btn btn-sm btn-light position-absolute top-2 end-2">
+                        <button class="btn btn-sm btn-light position-absolute top-2 end-2" style="top: 10px;right: 10px">
                             <i class="bi bi-star"></i>
                         </button>
                     </div>
@@ -18,13 +18,15 @@
                         </h6>
                         <div class="d-flex justify-content-between align-items-center dynamic-text">
                             <div class="price">
-                                $<span class="price_amount">{{ $item->current_price ?? $item->price }}</span>
+                                $<span class="price_amount">{{ $item->current_price ?? $item->auction_starting_price }}</span>
                                 <br>
                             </div>
                             @php
                                 $bidding_count = 0;
+                                $last_bidder = '';
                                 if (isset($item->biddings)) {
                                     $bidding_count = count($item->biddings);
+                                    $last_bidder = $item->biddings->last()->user->name?? '';
                                 }
                             @endphp
                             <small class="text-muted"><span class="bidding_count">{{ $bidding_count }}</span>
@@ -36,11 +38,14 @@
                         <div class="progress mt-2" style="height: 4px;">
                             <div class="progress-bar bg-success" style="width: 45%"></div>
                         </div>
-                        <div class="d-flex justify-content-center align-items-center mt-3">
+                        <div class="d-flex flex-column justify-content-center align-items-center mt-3">
+                            <div>
+                                <div class="last_bidder" style="color: green">{{$last_bidder}}</div>
+                            </div>
                             <div>
                                 <small class="text-muted">Time Left</small>
-                                <div class="timer" data-time="90">
-                                    00:01:30
+                                <div class="timer" data-time="100">
+                                    00:00:10
                                 </div>
                             </div>
                         </div>

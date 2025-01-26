@@ -14,7 +14,12 @@ class BiddingController extends Controller
     public function placeBid(Request $request)
     {
         $item = Product::find($request->item_id);
-        $item->current_price += $item->price_increase_by; // Increment the price
+        if (isset($item->current_price)) {
+            $item->current_price += $item->price_increase_by; // Increment the price
+        }else{
+            $item->current_price = $item->auction_starting_price + $item->price_increase_by;
+        }
+        
         $item->save();
 
         $bidding = new Bidding();
@@ -26,9 +31,13 @@ class BiddingController extends Controller
         $user = auth()->user();
 
         $total_bids = 0;
+        $last_bidder = '';
         if (isset($item->biddings) && $item->biddings->count() > 0) {
             $total_bids = $item->biddings->count();
+
+            $last_bidder = $item->biddings->last()->user->name ?? '';
         }
+        
         
 
 
@@ -40,7 +49,7 @@ class BiddingController extends Controller
         broadcast(new PriceUpdated(
             $item->id,
             $item->current_price,
-            $user->name,
+            $last_bidder,
             $total_bids
         ));
 

@@ -93,11 +93,17 @@
         $(document).ready(function() {
             console.log('index page Ready');
 
-
+            // Check if user is logged in (Example logic, adjust according to your backend)
+            const isLoggedIn = {{ auth()->check() ? 'true' : 'false' }}; // Replace with your backend logic
 
 
             $(".bid_now_btn").click(function(e) {
                 e.preventDefault();
+
+                if (!isLoggedIn) {
+                    window.location.href = "{{ route('login') }}"; // Redirect to login page
+                }
+
                 let that = $(this);
                 let item_id = that.data('id');
                 console.log(item_id);
@@ -126,6 +132,9 @@
                 const timer = $(this);
                 let totalSeconds = parseInt(timer.data("time"), 10);
 
+                // Find the associated button for this timer
+                const bidButton = timer.closest(".product-card").find(".bid_now_btn");
+
                 const interval = setInterval(function() {
                     const minutes = Math.floor(totalSeconds / 60);
                     const seconds = totalSeconds % 60;
@@ -133,15 +142,23 @@
                     // Format as MM:SS
                     timer.text(
                         `00:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`
-                        );
+                    );
 
                     totalSeconds--;
 
                     if (totalSeconds < 0) {
                         clearInterval(interval);
                         timer.text("00:00:00"); // Time is up!
+
+                        console.log('Time is up! disabled');
+
+                        // Disable the associated button
+                        bidButton.prop("disabled", true).addClass("disabled");
                     }
                 }, 1000);
+
+                // Attach interval to the timer element for easy access later
+                timer.data("interval", interval);
             });
 
 
@@ -182,7 +199,7 @@
                     if (itemElement) {
                         itemElement.find('.price_amount').text(event.newPrice.toFixed(2));
                         itemElement.find('.bidding_count').text(event.totalBids);
-                        itemElement.find('.user_name').text(event.userName);
+                        itemElement.find('.last_bidder').text(event.lastBidder);
 
 
 
@@ -191,6 +208,47 @@
                         setTimeout(() => {
                             dynamicText.removeClass("highlight-text");
                         }, 1000);
+
+
+
+                        // Reset the timer for this specific product/item
+                        const timer = itemElement.find(".timer");
+                        let interval = timer.data("interval");
+
+                        // Clear the existing interval
+                        clearInterval(interval);
+
+                        // Restart the timer with 10 seconds
+                        let totalSeconds = 10;
+                        const newInterval = setInterval(() => {
+                            const minutes = Math.floor(totalSeconds / 60);
+                            const seconds = totalSeconds % 60;
+
+                            // Format as MM:SS
+                            timer.text(
+                                `00:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`
+                            );
+
+                            totalSeconds--;
+
+                            if (totalSeconds < 0) {
+                                clearInterval(newInterval);
+                                timer.text("00:00:00"); // Time is up!
+
+                                // Disable the associated button
+                                itemElement.find(".bid_now_btn").prop("disabled", true).addClass(
+                                    "disabled");
+                            }
+                        }, 1000);
+
+                        // Save the new interval ID to the timer element
+                        timer.data("interval", newInterval);
+
+
+
+
+
+
                     }
                 });
         });

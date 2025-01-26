@@ -17,17 +17,17 @@ class PriceUpdated implements ShouldBroadcast
 
     public $itemId;
     public $newPrice;
-    public $userName;
+    public $lastBidder;
     public $totalBids;
 
     /**
      * Create a new event instance.
      */
-    public function __construct($itemId, $newPrice,$userName,$totalBids)
+    public function __construct($itemId, $newPrice,$lastBidder,$totalBids)
     {
         $this->itemId = $itemId;
         $this->newPrice = $newPrice;
-        $this->userName = $userName;
+        $this->lastBidder = $lastBidder;
         $this->totalBids = $totalBids;
     }
 
