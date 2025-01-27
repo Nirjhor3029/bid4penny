@@ -6,7 +6,7 @@
 4.  php artisan key:generate
 5.  Create db and change the credential inside the env file[DB name, Username, password]   
 6.  php artisan migrate
-7.  php artisan migrate --seed (It will create a new user dummy one in the system automatically, admin, admin@gmail.com, secret plus all the needed seed for the catagory)
+7.  php artisan migrate --seed (It will create a new user dummy one in the system automatically, admin, admin@admin.com, secret plus all the needed seed for the catagory)
 8.  run php artisan storage:link.
 
 
@@ -21,6 +21,9 @@ Password: password
 2. php artisan auction:start [For Testing Auction, by default scheduled at 09:00]
 3. php artisan schedule:work [For Running scheduled at 09:00]
 
+
+<img src="https://iili.io/2LMioYl.png" alt="Auction Live Page">
+<img src="https://iili.io/2LMLSBn.png" alt="Auction Live Page">
 
 
 
