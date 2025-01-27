@@ -1,3 +1,33 @@
+### Setting up the environment
+
+1.  clone the git
+2.  cp .env.example .env  [Run cp .env.example .env file to copy example file to .env]
+3.  composer update --no-scripts / Run composer install command
+4.  php artisan key:generate
+5.  Create db and change the credential inside the env file[DB name, Username, password]   
+6.  php artisan migrate
+7.  php artisan migrate --seed (It will create a new user dummy one in the system automatically, admin, admin@gmail.com, secret plus all the needed seed for the catagory)
+8.  run php artisan storage:link.
+
+
+### And that's it, go to your domain and login:
+
+Default credentials
+Username: admin@admin.com
+Password: password
+
+##### Testing
+1. Create Some Products and users for testing purposes
+2. php artisan auction:start [For Testing Auction, by default scheduled at 09:00]
+3. php artisan schedule:work [For Running scheduled at 09:00]
+
+
+
+
+
+
+
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
