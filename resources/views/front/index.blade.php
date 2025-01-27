@@ -128,38 +128,38 @@
 
 
 
-            $(".timer").each(function() {
-                const timer = $(this);
-                let totalSeconds = parseInt(timer.data("time"), 10);
+            // $(".timer").each(function() {
+            //     const timer = $(this);
+            //     let totalSeconds = parseInt(timer.data("time"), 10);
 
-                // Find the associated button for this timer
-                const bidButton = timer.closest(".product-card").find(".bid_now_btn");
+            //     // Find the associated button for this timer
+            //     const bidButton = timer.closest(".product-card").find(".bid_now_btn");
 
-                const interval = setInterval(function() {
-                    const minutes = Math.floor(totalSeconds / 60);
-                    const seconds = totalSeconds % 60;
+            //     const interval = setInterval(function() {
+            //         const minutes = Math.floor(totalSeconds / 60);
+            //         const seconds = totalSeconds % 60;
 
-                    // Format as MM:SS
-                    timer.text(
-                        `00:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`
-                    );
+            //         // Format as MM:SS
+            //         timer.text(
+            //             `00:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`
+            //         );
 
-                    totalSeconds--;
+            //         totalSeconds--;
 
-                    if (totalSeconds < 0) {
-                        clearInterval(interval);
-                        timer.text("00:00:00"); // Time is up!
+            //         if (totalSeconds < 0) {
+            //             clearInterval(interval);
+            //             timer.text("00:00:00"); // Time is up!
 
-                        console.log('Time is up! disabled');
+            //             console.log('Time is up! disabled');
 
-                        // Disable the associated button
-                        bidButton.prop("disabled", true).addClass("disabled");
-                    }
-                }, 1000);
+            //             // Disable the associated button
+            //             bidButton.prop("disabled", true).addClass("disabled");
+            //         }
+            //     }, 1000);
 
-                // Attach interval to the timer element for easy access later
-                timer.data("interval", interval);
-            });
+            //     // Attach interval to the timer element for easy access later
+            //     timer.data("interval", interval);
+            // });
 
 
 
@@ -233,7 +233,8 @@
 
                             if (totalSeconds < 0) {
                                 clearInterval(newInterval);
-                                timer.text("00:00:00"); // Time is up!
+                                // timer.text("00:00:00"); // Time is up!
+                                timer.text("SOLD"); // Time is up!
 
                                 // Disable the associated button
                                 itemElement.find(".bid_now_btn").prop("disabled", true).addClass(
@@ -243,14 +244,54 @@
 
                         // Save the new interval ID to the timer element
                         timer.data("interval", newInterval);
-
-
-
-
-
-
                     }
                 });
+
+
+
+
+
+
+            console.log('Listening for auction start');
+            window.Echo.channel('auction')
+                .listen('.started', () => {
+                    console.log('Auction started!');
+
+                    // Perform actions, e.g., enable bidding buttons, reset timers, etc.
+                    $(".bid_now_btn").prop("disabled", false).removeClass("disabled");
+                    $(".bid_now_btn").show();
+                    
+                    $(".starting_soon_btn").hide();
+
+                    // Optionally reset all timers to a default value
+                    $(".timer").each(function() {
+                        const timer = $(this);
+                        const bidButton = timer.closest(".product-card").find(".bid_now_btn");
+
+                        let totalSeconds = 10; // Set auction duration in seconds
+                        const interval = setInterval(function() {
+                            const minutes = Math.floor(totalSeconds / 60);
+                            const seconds = totalSeconds % 60;
+
+                            timer.text(
+                                `00:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`
+                            );
+
+                            totalSeconds--;
+
+                            if (totalSeconds < 0) {
+                                clearInterval(interval);
+                                // timer.text("00:00:00");
+                                timer.text("SOLD");
+
+                                bidButton.prop("disabled", true).addClass("disabled");
+                            }
+                        }, 1000);
+
+                        timer.data("interval", interval);
+                    });
+                });
+
         });
     </script>
 @endsection

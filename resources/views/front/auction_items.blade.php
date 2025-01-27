@@ -44,8 +44,9 @@
                             </div>
                             <div>
                                 <small class="text-muted">Time Left</small>
-                                <div class="timer" data-time="100">
-                                    00:00:10
+                                <div class="timer" data-time="10">
+                                    {{-- 00:00:10 --}}
+                                    Coming Soon 09:00 
                                 </div>
                             </div>
                         </div>
@@ -54,7 +55,11 @@
                                 <small class="text-muted">Retail Price</small>
                                 <div>{{ $item->price }}</div>
                             </div>
-                            <button class="btn btn-success btn-sm bid_now_btn" data-id="{{ $item->id }}">
+
+                            <button class="btn btn-success btn-sm starting_soon_btn" disabled>
+                                Starting soon
+                            </button>
+                            <button class="btn btn-success btn-sm bid_now_btn" style="display: none" data-id="{{ $item->id }}">
                                 Bid Now
                             </button>
                         </div>

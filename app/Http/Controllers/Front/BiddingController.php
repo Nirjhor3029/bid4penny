@@ -6,6 +6,7 @@ use App\Events\PriceUpdated;
 use App\Http\Controllers\Controller;
 use App\Models\Bidding;
 use App\Models\Product;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -26,6 +27,7 @@ class BiddingController extends Controller
         $bidding->user_id = auth()->id();
         $bidding->product_id = $item->id;
         $bidding->bid_price = $item->current_price;
+        $bidding->bidding_time = Carbon::now();
         $bidding->save();
 
         $user = auth()->user();
