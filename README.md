@@ -21,6 +21,14 @@ Password: password
 2. php artisan auction:start [For Testing Auction, by default scheduled at 09:00]
 3. php artisan schedule:work [For Running scheduled at 09:00]
 
+##### also giving the demo database into `database/db/bid4penny.sql`
+Admin: <br>
+Username: admin@admin.com, Password: password
+
+Users: <br>
+Username: user1@nomail.com, Password: 12345678 <br>
+Username: user2@nomail.com, Password: 12345678 <br>
+Username: user3@nomail.com, Password: 12345678 <br>
 
 <img src="https://iili.io/2LMioYl.png" alt="Auction Live Page">
 <img src="https://iili.io/2LMLSBn.png" alt="Auction Live Page">
